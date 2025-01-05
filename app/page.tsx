@@ -3,6 +3,7 @@
 import { useSocket } from "./hooks/useSocket";
 import { useName } from "./hooks/useName";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   const {
@@ -26,7 +27,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gray-100">
+    <main className="flex min-h-screen flex-col items-center justify-center md:p-24 px-2 bg-gray-100">
       <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6 flex flex-col items-center">
         <h1 className="text-2xl font-bold mb-4">マッチングゲーム</h1>
         <p>
@@ -58,7 +59,10 @@ export default function Home() {
             <ul>
               {results &&
                 results.map((result) => (
-                  <li key={result.socketId}>
+                  <li
+                    key={result.socketId}
+                    className={cn(result.playerName === name && "text-red-500")}
+                  >
                     {result.playerName}:{result.dice}
                   </li>
                 ))}
@@ -68,12 +72,9 @@ export default function Home() {
         {results?.every((result) => result.dice !== undefined) && (
           <p>
             あなたは
-            {
-              // resultsを,diceが大きい順に並べる
-              results
-                .toSorted((a, b) => (b.dice || 0) - (a.dice || 0))
-                .findIndex((result) => result.dice === dice)
-            }
+            {results
+              .toSorted((a, b) => (b.dice || 0) - (a.dice || 0))
+              .findIndex((result) => result.dice === dice) + 1}
             位です！
           </p>
         )}
